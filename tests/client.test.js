@@ -40,6 +40,7 @@ describe('Client', function () {
 	})
 
 	it('Send metrics to graphite', function (done) {
+		process.env.NODE_ENV = 'production';
 		this.mitm.on("connection", function(socket) {
 			socket.on('data', function (d) {
 				expect(d.toString('utf-8')).to.equal("k.p.a 1 1434399121\n");
@@ -47,6 +48,21 @@ describe('Client', function () {
 			})
 		});
 		Graphite({ host: 'test.host.com', port: 1000 }).send('k.p.a 1 1434399121\n')
-	})
+	});
+
+	it('Limit sending metrics in non-production environments', function () {
+		process.env.NODE_ENV = undefined;
+		const m = Graphite({ host: 'test.host.com', port: 1000 }).send('k.p.a 1 1434399121\n')
+		expect(m).to.equal(false);
+	});
+
+	it('Force sending metrics in non-production environments', function () {
+		process.env.NODE_ENV = undefined;
+		const socket = sinon.spy();
+		this.mitm.on("connection", socket)
+		const m = Graphite({ host: 'test.host.com', port: 1000, onlyLogProductionMetrics: false }).send('k.p.a 1 1434399121\n')
+		expect(socket.calledOnce).to.equal(true);
+	});
+
 
 });

@@ -4,10 +4,11 @@ const logger = require('@financial-times/n-logger').default;
 
 class Graphite {
 
-	constructor({transmit=true, host, port}={}) {
-		this.transmit = transmit;
+	constructor({transmit=true, host, port, onlyLogProductionMetrics=true}={}) {
 		this.host = host;
 		this.port = port;
+		this.onlyLogProductionMetrics = onlyLogProductionMetrics;
+		this.isProduction = process.env.NODE_ENV === 'production';
 	}
 
 	log(metrics) {
@@ -42,7 +43,12 @@ class Graphite {
 
 	send(metrics) {
 
-		logger.debug({ event: 'graphite_send', metrics: metrics, host: this.host, port: this.port });
+		if (!this.isProduction && this.onlyLogProductionMetrics) {
+			logger.debug({ event: 'GRAPHITE_DISABLED', metrics: metrics, node_env: process.env.NODE_ENV });
+			return false;
+		}
+
+		logger.debug({ event: 'GRAPHITE_SEND', metrics: metrics, host: this.host, port: this.port });
 
 		const socket = net.createConnection(this.port, this.host, () => {
 			socket.write(metrics); // trailing \n to ensure the last metric is registered
