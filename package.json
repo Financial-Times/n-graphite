@@ -1,0 +1,27 @@
+{
+  "name": "n-graphite",
+  "version": "1.0.0",
+  "description": "Client library for Graphite metrics database",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Financial-Times/n-graphite.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Financial-Times/n-graphite/issues"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@financial-times/n-logger": "^5.4.8"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mitm": "^1.3.2",
+    "mocha": "^3.2.0",
+    "sinon": "^1.17.7"
+  }
+}
