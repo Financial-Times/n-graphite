@@ -1,14 +1,14 @@
-This library formats and 
+This library formats and transmits metrics.
 
 # Usage
 
-Include the librbary,
+Include the library:
 
 ```
 const Graphite = require('n-graphite');
 ```
 
-Then,
+Then:
 
 ```
 const metrics = new Map([['http.req.mean', 100], ['http.req.count', 82]]);
